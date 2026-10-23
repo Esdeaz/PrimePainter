@@ -1,0 +1,25 @@
+# Dependencies and generated output
+node_modules/
+dist/
+release/
+test-results/
+playwright-report/
+.vite/
+coverage/
+*.log
+*.tsbuildinfo
+
+# Local settings and user projects
+.env
+.env.*
+!.env.example
+*.local
+*.prime
+/*.exe
+/*.zip
+/NVIDIA Corporation/
+.DS_Store
+Thumbs.db
+
+# Third-party research images; official source links remain in docs/recon.md
+/docs/references/

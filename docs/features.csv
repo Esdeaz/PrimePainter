@@ -1,0 +1,82 @@
+feature,area,priority,original,clone,notes,evidence,verification
+Рабочий стол с панелями Painter,Интерфейс,must,yes,partial,Размеры и скрытие панелей; произвольного docking нет,GUIDE,workflows.spec.ts; снимки браузера и Electron
+Режимы 3D и 2D и split view,Viewport,must,yes,yes,Переключение и перестановка 3D/2D,GUIDE,UI paint в двух представлениях; код layout
+Orbit pan zoom и фокус модели,Viewport,must,yes,yes,Alt+drag; правая или средняя; колесо; F,GUIDE,workflows.spec.ts: orbit; код остальных controls
+Wireframe и просмотр отдельных каналов,Viewport,must,yes,yes,Material и пять выходных каналов; кэш видимых пикселей UV wireframe без уменьшения качества,GUIDE,viewport.spec.ts: совпадение пикселей и reuse кэша; отдельные channel uploads; engine.spec.ts: данные каналов
+Импорт OBJ,Проект,must,yes,yes,UV и набор на материал; до 100 MiB и 2 млн треугольников,PROJECT,workflows.spec.ts: OBJ с двумя материалами и ошибочный файл; production Electron IPC; настоящий Windows chooser с RU Ctrl+I
+Импорт glTF и GLB,Проект,should,yes,partial,Только самостоятельные файлы без внешних URI; static bind pose; bitmap материала заменяется,PROJECT,electron-workflows.spec.ts: успешный GLB с UV; весь набор вариантов GLB/glTF не проверен
+Импорт FBX Alembic USD и других форматов Painter,Проект,must,yes,no,Не реализовано; поддержка CAD у других приложений Adobe не приписывается Painter,PROJECT;FORMATS,Нет реализации
+Собственный локальный проект PrimePainter,Проект,must,no,yes,Собственный .prime; mesh и UV и слои и embedded PNG; без undo-истории,Локальная реализация,UI download/reopen и recovery; native IPC/read/save; настоящий Windows Save через RU Ctrl+S: корректный .prime 147679 байт и dirty=false
+Открытие и сохранение проектов SPP,Совместимость,must,yes,no,Не реализовано; собственный формат не является SPP,PROJECT,Не проверено
+Шаблоны проектов SPT,Совместимость,should,yes,no,Не реализовано,PROJECT,Не проверено
+Несколько Texture Sets по материалам,Проект,must,yes,yes,До 16 наборов при соблюдении общего бюджета растров,PROJECT,OBJ UI; viewport roundtrip; ZIP с коллизией имён
+Изменение разрешения Texture Sets,Проект,must,yes,partial,256–2048² общее для всех наборов; отдельных размеров нет,PROJECT,engine.spec.ts: resize и undo с сохранением пикселей
+Работа 4K и экспорт 8K,Проект,must,yes,no,Максимум рабочей карты и экспорта 2048²; 4K и 8K отсутствуют,PROJECT,Проверка диапазона в коде; экспортные тесты на 256²
+UDIM и рисование между UV Tiles,UV,must,yes,no,Не реализовано,TILES,Не проверено
+Разрешение каждого UV Tile,UV,should,yes,no,Не реализовано,TILES,Не проверено
+Автоматическая UV-развёртка,UV,must,yes,no,Не реализовано,GUIDE,Не проверено
+Перепроекция при замене mesh и UV,UV,must,yes,no,Не реализовано,GUIDE,Не проверено
+Padding и устранение seams,UV,must,yes,no,Разрыв линии между islands не является padding; дилатации и seam-aware painting нет,GUIDE,Нет реализации
+Кисть по 3D-поверхности,Рисование,must,yes,yes,Raycast в UV активного набора; круглая кисть; UV 0–1,TOOLS,workflows.spec.ts: реальный mouse stroke изменяет карту
+Кисть в 2D UV,Рисование,must,yes,yes,Растровое рисование в UV-представлении,TOOLS,workflows.spec.ts: точные пиксели кисти и undo/redo
+Размер flow opacity hardness spacing,Рисование,must,yes,partial,Есть size flow hardness spacing; отдельной stroke opacity нет,TOOLS,engine.spec.ts: strokes; workflows.spec.ts: controls
+Ластик,Рисование,must,yes,yes,Удаляет краску активного слоя; маску красит чёрным,TOOLS,UI erase и engine undo
+Одновременное рисование PBR-каналов,Рисование,must,yes,yes,Одновременно Base Color Roughness Metallic Height,LAYERS,engine.spec.ts: pixel assertions четырёх карт
+Alpha brushes и импорт alpha,Рисование,must,yes,partial,Только процедурная круглая alpha; импорт формы кисти отсутствует,GUIDE,Код dab; UI и engine strokes
+Projection и stencil,Рисование,must,yes,no,Не реализовано,TOOLS,Не проверено
+Polygon fill mesh polygon и UV island,Рисование,must,yes,partial,Triangle UV island mesh и Texture Set; исходные quad-полигоны не сохраняются,TOOLS,engine.spec.ts: UV fill; viewport.spec.ts: face mesh island
+Polygon loop и partial loop версии 12.2,Рисование,must,yes,no,Не реализовано,V122,Не проверено
+Hit-test и отсечение скрытых полигонов в fill,Рисование,must,yes,partial,Одиночный click по ближайшей поверхности; region hit-test и polygon loops отсутствуют,V122,Код raycast и UV picking; viewport.spec.ts
+Smudge,Рисование,must,yes,no,Не реализовано,TOOLS,Не проверено
+Clone,Рисование,must,yes,no,Не реализовано,TOOLS,Не проверено
+Material picker,Рисование,must,yes,yes,Читает Base Color Roughness Metallic Height из поверхности или UV,TOOLS,Код sample; отдельный UI-тест picker не выполнялся
+Quick mask,Рисование,should,yes,no,Не реализовано,TOOLS,Не проверено
+Mirror symmetry,Рисование,must,yes,partial,Отражение текстуры U; симметрии в мировом 3D-пространстве нет,GUIDE,engine.spec.ts: совпадение зеркальных пикселей
+Radial symmetry,Рисование,should,yes,no,Не реализовано,GUIDE,Не проверено
+Lazy mouse и straight line,Рисование,should,yes,no,Нет стабилизатора и режима прямой; интерполяция штриха их не заменяет,GUIDE,Нет реализации
+Планшет pressure tilt и calibration,Ввод,must,yes,partial,Pointer pressure влияет на размер и flow; tilt и calibration отсутствуют,GUIDE,Синтетический pressure в engine.spec.ts; физический планшет не проверялся
+Paths с редактируемыми точками на поверхности,Рисование,must,yes,no,Не реализовано,PATH,Не проверено
+Ribbon paths и текст вдоль пути,Рисование,must,yes,no,Не реализовано,PATH;RIBBON,Не проверено
+Filled paths и erase/smudge along path,Рисование,should,yes,no,Не реализовано,PATH,Не проверено
+Particles и dynamic strokes,Рисование,must,yes,no,Не реализовано,GUIDE;LAYERS,Не проверено
+Paint layers,Слои,must,yes,yes,Четыре карты; duplicate clear и merge с проверкой сохранения внешнего вида,LAYERS,engine.spec.ts и workflows.spec.ts
+Fill layers,Слои,must,yes,yes,Параметрический fill собственных пресетов; UV scale; без Substance,LAYERS,engine.spec.ts: карты и blending; UI material doubleclick
+Opacity visibility и reorder слоёв,Слои,must,yes,yes,Общие opacity и visibility; перемещение в линейном стеке,LAYERS,engine.spec.ts: compositing; код moveLayer и UI actions
+Blend modes для каждого канала,Слои,must,yes,partial,Только Normal Multiply Screen Overlay; общий режим и opacity для каналов,LAYERS,engine.spec.ts: blending и отказ от меняющего вид merge
+Папки и групповой blending,Слои,must,yes,no,Не реализовано,LAYERS,Не проверено
+Белые чёрные и рисуемые маски,Слои,must,yes,yes,Grayscale mask; кисть fill invert remove; независимость дубликата,LAYERS,engine.spec.ts: COW и маски; UI mask paint и undo
+Bitmap color-selection и geometry masks,Слои,must,yes,no,Не реализовано,LAYERS,Не проверено
+Filters и procedural effects stack,Слои,must,yes,no,Не реализовано,LAYERS,Не проверено
+Anchor points и зависимые generators,Слои,must,yes,no,Не реализовано,GUIDE;LAYERS,Не проверено
+Layer instancing между Texture Sets,Слои,should,yes,no,Не реализовано,LAYERS,Не проверено
+Undo redo и история,Проект,must,yes,yes,До 16 действий; цель old-canvas 128 MiB с сохранением одного шага; без сохранения истории в файл,GUIDE,engine.spec.ts: pixels masks merge resize; UI shortcuts
+High-to-low baking mesh maps,Baking,must,yes,no,Не реализовано,BAKE,Не проверено
+Normal AO curvature position thickness ID bakers,Baking,must,yes,no,Не реализовано,PROJECT;BAKE,Не проверено
+Match by name и multiple high-poly meshes,Baking,must,yes,no,Не реализовано,BAKE,Не проверено
+Cage geometry и distances,Baking,must,yes,no,Не реализовано,BAKE;V122,Не проверено
+Cage painting версии 12.2,Baking,must,yes,no,Не реализовано,V122,Не проверено
+Skew painting и reset cage/skew,Baking,must,yes,no,Не реализовано,V122,Не проверено
+Substance Engine исполнение SBSAR,Совместимость,must,yes,no,Не реализовано,GUIDE;RIBBON,Не проверено
+Smart Materials и Smart Masks,Материалы,must,yes,no,16 процедурных пресетов не являются Smart Materials или Smart Masks,GUIDE,Нет реализации
+Импорт собственных bitmap-ресурсов,Ресурсы,must,yes,yes,PNG JPEG WebP в Base Color paint layer; до 32 MiB и 8192²,GUIDE,engine.spec.ts: alpha и scalar maps; код UI file import
+Поиск и фильтрация Assets,Ресурсы,must,yes,yes,Поиск и категории 16 пресетов и кистей; список своих bitmap,GUIDE,workflows.spec.ts: поиск Copper и применение
+Лицензированные библиотеки Adobe,Ресурсы,must,yes,no,Не включены; требуется собственная законная библиотека,GUIDE,Не проверено
+PBR metallic roughness viewport,Рендер,must,yes,yes,Metallic Roughness и image-based studio; качество и разрешение при оптимизации не снижены,GUIDE,UI 3D painting; paint-profile.cjs: только RTX5080 D3D11 Helmet1024²; frame mean238.51→14.66ms и p95 250.1→20.8ms; UV mean210.58→0.01ms; render mean8.36ms после исправления
+Normal height emissive opacity channels,Рендер,must,yes,partial,Есть Height и производный Normal; emissive и opacity отсутствуют; карты 8-bit,GUIDE,engine.spec.ts: height gradients и normal; нет emissive/opacity
+HDR environment rotation exposure,Рендер,must,yes,partial,Встроенное студийное окружение с rotation и exposure; HDR-import отсутствует,GUIDE,Код display controls; native screenshot; отдельного HDR-теста нет
+Iray offline rendering,Рендер,must,yes,no,Не реализовано,GUIDE,Не проверено
+Displacement tessellation и real-world size,Рендер,must,yes,no,Не реализовано,PROJECT;RIBBON,Не проверено
+Subsurface scattering anisotropy и custom shaders,Рендер,must,yes,no,Не реализовано,GUIDE,Не проверено
+Order-independent transparency версии 12.2,Рендер,must,yes,no,Не реализовано,V122,Не проверено
+Post-processing и camera effects,Рендер,should,yes,partial,Tone mapping exposure и FOV; нет полноценного post stack и depth of field,GUIDE,Код renderer и display controls
+Color management OCIO и ICC,Цвет,must,yes,no,Не реализовано,GUIDE,Не проверено
+DirectX OpenGL normal convention,Экспорт,must,yes,partial,OpenGL viewport; DirectX на экспорте через инверсию G; полноценной tangent configuration нет,PROJECT,UI ZIP: точные байты normal DirectX
+Экспорт PBR-карт PNG,Экспорт,must,yes,yes,Пять PNG-карт 8-bit в ZIP; разрешение проекта до 2048²,EXPORT,UI ZIP: размеры PNG и пиксели; одинаковые имена не перезаписывают sets
+Output templates и channel packing,Экспорт,must,yes,partial,Четыре фиксированных PBR URP HDRP Unreal; AO и HDRP detail белые; редактора шаблонов нет,EXPORT,UI: реальные packed PNG-каналы URP HDRP Unreal
+TIFF TGA EXR PSD и высокая bit depth,Экспорт,must,yes,no,Не реализовано,EXPORT,Не проверено
+Экспорт mesh с displacement,Экспорт,must,yes,no,Не реализовано,EXPORT,Не проверено
+Python JavaScript plugins и scripting API,Интеграции,should,yes,no,Не реализовано,GUIDE,Не проверено
+SpaceMouse и пользовательские shortcuts,Ввод,should,yes,no,Не реализовано,GUIDE,Не проверено
+Стандартные shortcuts при русской раскладке,Ввод,must,yes,yes,Встроенные сочетания распознаются по физическому code; пользовательского редактора нет,GUIDE,shortcuts.spec.ts; настоящий Windows UI: RU Ctrl+I выбирает OBJ и RU Ctrl+S сохраняет .prime
+Sparse virtual textures и большие проекты,Производительность,must,yes,no,Не реализовано,GUIDE,Не проверено
+Локальное desktop-окно и сохранение файлов,Desktop,must,no,yes,Electron isolation и native open/write; temporary+rename; dirty close; portable 0.1.1 собран и запущен,Локальная реализация,self-check; общий npm test 35/35; повтор native E2E на packaged exe; настоящий Windows chooser и Save в packaged без подмены путей

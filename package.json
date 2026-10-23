@@ -1,0 +1,59 @@
+{
+  "name": "prime-painter",
+  "version": "0.1.1",
+  "private": true,
+  "description": "An experimental local PBR texture painter built with Three.js and Electron",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build --base ./",
+    "preview": "vite preview --host 127.0.0.1",
+    "desktop": "npm run build && electron .",
+    "package": "npm run build && electron-builder --win portable --config.electronDist=node_modules/electron/dist",
+    "test": "node electron/self-check.cjs && playwright test",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "three": "^0.180.0",
+    "lucide": "^0.468.0",
+    "fflate": "^0.8.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/three": "^0.180.0",
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.6"
+  },
+  "build": {
+    "appId": "studio.primepainter.app",
+    "productName": "PrimePainter",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "win": {
+      "target": "portable",
+      "artifactName": "PrimePainter-${version}.exe"
+    }
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "keywords": [
+    "pbr",
+    "texture-painting",
+    "threejs",
+    "electron",
+    "typescript"
+  ]
+}

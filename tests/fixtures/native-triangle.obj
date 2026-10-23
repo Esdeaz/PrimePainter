@@ -1,0 +1,9 @@
+o Native triangle
+v -1 -1 0
+v 1 -1 0
+v 0 1 0
+vt .1 .1
+vt .9 .1
+vt .5 .9
+usemtl Native_Surface
+f 1/1 2/2 3/3
